@@ -1,9 +1,8 @@
-﻿using System.IO;
-using System;
+﻿using System;
+using System.IO;
 using System.Linq;
 using iTextSharp.text.pdf;
 using iTextSharp.text;
-
 
 namespace ConsoleApp1
 {
@@ -42,7 +41,6 @@ namespace ConsoleApp1
         //Метод сортировки файлов PDF
         static void Sorting(string sourceDirect, string pdfDirect, int pageSize)
         {
-            //if в каждом формате нужен для удобного разделения по 10 файлов
             if (84 >= (pageSize / 100000) & (pageSize / 100000) >= 76)// Формат А0
             {
                 CopyPDF(sourceDirect, pdfDirect, "А0");
@@ -74,36 +72,33 @@ namespace ConsoleApp1
             return;
         }
 
-
         static void Main()
         {
             Console.WriteLine("Укажите путь к папке в которой необходимо выполнить сортировку PDF по форматам:");
-            //Директория файла
             string sourcelDirect = Console.ReadLine();
-            //Создание необходимых директорий
             CreateDirectory(sourcelDirect);
+
             //Поиск коллекции всех PDF по директории в которой находится файл программы
             var files = from file in Directory.EnumerateFiles(sourcelDirect, "*.pdf", SearchOption.AllDirectories)
                         select new
                         {
                             File = file
                         };
-            //Счетчик файлов
             int countFiles = 0;
-            //Массив всех директорий
             string[] allDirect = new string[files.Count()];
-            //Заполнение массива директорий
             foreach (var item in files)
             {
                 allDirect[countFiles] = item.File;
                 countFiles++;
             }
+
             //Основная часть программы, которая перебирает все PDF и сортирует их по папкам
             for (int i = 0; i < allDirect.Length; i++)
             {
                 //Дополнение itextsharp.dll
                 PdfReader reader = new PdfReader(allDirect[i]);
                 Rectangle pagesize = reader.GetPageSize(1);
+
                 //Попытка выполнить программу или выкинуть ошибку
                 try
                 {
@@ -121,5 +116,3 @@ namespace ConsoleApp1
         }
     }
 }
-
-
